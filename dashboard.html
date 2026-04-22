@@ -249,24 +249,30 @@ function render(){
 // ===== WARNING =====
 function cekWarning(saldo, masuk, keluar, totalKeinginan){
 
+  let box = document.getElementById("warningBox");
+  let text = document.getElementById("warningText");
+
   let warning = "";
 
-  // 🔥 baru aktif kalau data cukup
-  if(masuk + keluar < 10000){
-    document.getElementById("warningBox").style.display = "none";
+  // 🔥 hanya aktif kalau sudah ada aktivitas cukup
+  if((masuk + keluar) < 10000){
+    box.style.display = "none";
     return;
   }
 
-  if(totalKeinginan > keluar * 0.5){
-    warning = "⚠️ Pengeluaran keinginan kamu cukup tinggi, hati-hati!";
+  // 🔥 indikator 1: keinginan terlalu besar dari pengeluaran
+  let rasioKeinginan = totalKeinginan / (keluar || 1);
+
+  // 🔥 indikator 2: sisa saldo
+  let rasioSaldo = saldo / (masuk || 1);
+
+  if(rasioKeinginan > 0.6){
+    warning = "⚠️ Kamu terlalu banyak mengeluarkan uang untuk keinginan.";
   }
 
-  if(saldo < masuk * 0.2){
-    warning = "⚠️ Saldo kamu mulai menipis!";
+  if(rasioSaldo < 0.2){
+    warning = "⚠️ Sisa saldo kamu sudah sangat kecil.";
   }
-
-  let box = document.getElementById("warningBox");
-  let text = document.getElementById("warningText");
 
   if(warning){
     box.style.display = "block";
@@ -275,7 +281,7 @@ function cekWarning(saldo, masuk, keluar, totalKeinginan){
     box.style.display = "none";
   }
 }
-  
+
 // ===== TARGET =====
 function setTarget(){
 
