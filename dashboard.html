@@ -247,13 +247,33 @@ function render(){
 }
 
 // ===== WARNING =====
-function cekWarning(){
+function cekWarning(saldo, masuk, keluar, totalKeinginan){
+
+  let warning = "";
+
+  // 🔥 baru aktif kalau data cukup
+  if(masuk + keluar < 10000){
+    document.getElementById("warningBox").style.display = "none";
+    return;
+  }
+
+  if(totalKeinginan > keluar * 0.5){
+    warning = "⚠️ Pengeluaran keinginan kamu cukup tinggi, hati-hati!";
+  }
+
+  if(saldo < masuk * 0.2){
+    warning = "⚠️ Saldo kamu mulai menipis!";
+  }
 
   let box = document.getElementById("warningBox");
   let text = document.getElementById("warningText");
 
-  box.style.display = "block";
-  text.innerText = "⚠️ Hati-hati! Pengeluaran kamu perlu dikontrol.";
+  if(warning){
+    box.style.display = "block";
+    text.innerText = warning;
+  } else {
+    box.style.display = "none";
+  }
 }
   
 // ===== TARGET =====
