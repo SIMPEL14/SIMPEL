@@ -104,6 +104,10 @@ th, td {
     <h2>Rp <span id="saldo">0</span></h2>
   </div>
 
+  <div class="card" id="warningBox" style="display:none; background:#ffe5e5; color:red;">
+  <b id="warningText"></b>
+</div>
+
   <div class="card">
     <h3>📊 Grafik Keuangan</h3>
     <canvas id="chart"></canvas>
@@ -196,6 +200,7 @@ function render(){
   let saldo = 0;
   let masuk = 0;
   let keluar = 0;
+  let totalKeinginan = 0;
 
   transaksi.forEach((t,i)=>{
     if(t.tipe==="masuk"){
@@ -205,6 +210,10 @@ function render(){
       saldo -= t.jumlah;
       keluar += t.jumlah;
     }
+
+    if(t.kategori === "keinginan"){
+  totalKeinginan += t.jumlah;
+}
 
     tabel.innerHTML += `
     <tr>
@@ -233,6 +242,34 @@ function render(){
 
   renderTarget(saldo);
 }
+
+  cekWarning(saldo, masuk, keluar, totalKeinginan);
+
+  function cekWarning(saldo, masuk, keluar, totalKeinginan){
+
+  let warning = "";
+
+  // 🔥 kondisi 1: keinginan kebanyakan
+  if(totalKeinginan > keluar * 0.5){
+    warning = "⚠️ Pengeluaran keinginan kamu terlalu tinggi!";
+  }
+
+  // 🔥 kondisi 2: saldo menipis
+  if(saldo < masuk * 0.2){
+    warning = "⚠️ Saldo kamu mulai menipis!";
+  }
+
+  let box = document.getElementById("warningBox");
+  let text = document.getElementById("warningText");
+
+  if(warning){
+    box.style.display = "block";
+    text.innerText = warning;
+  } else {
+    box.style.display = "none";
+  }
+}
+
 
 // ===== TARGET =====
 function setTarget(){
